@@ -35,10 +35,11 @@ for i = 1:enumx*enumy
     iter = 0;
     for j = 1:4
         for k = 1:4
-            % this is only for grad^2 c
+            % this is only for grad^2 c = 0
             a_el(j, k) = (dphi_dx(j, :) .* dphi_dx(k, :) + dphi_dy(j, :) .* dphi_dy(k, :)) * gweit;
         end
     end
+    % assemble a
     for j = 1:4
         for k = 1:4
             a(nidx(j), nidx(k)) = a(nidx(j), nidx(k)) + a_el(j, k);

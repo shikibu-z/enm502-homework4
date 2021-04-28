@@ -1,4 +1,7 @@
 % This is where we do all the jobs
+clear;
+clc;
+
 % initialize parameters
 alph = 1;
 para_d = 1;
@@ -6,8 +9,8 @@ para_k = 1;
 c_0 = 1;
 
 % set number of elements in x and y, initialize A and b
-enumx = 50;
-enumy = 10;
+enumx = 100;
+enumy = 20;
 a = zeros((enumx + 1) * (enumy + 1));
 b = zeros((enumx + 1) * (enumy + 1), 1);
 
@@ -86,3 +89,4 @@ c = a \ b;
 
 % report result
 result = fgenres(c, enumx, enumy);
+contourf(result);

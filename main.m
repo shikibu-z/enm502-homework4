@@ -6,8 +6,8 @@ para_k = 1;
 c_0 = 1;
 
 % set number of elements in x and y, initialize A and b
-enumx = 5;
-enumy = 3;
+enumx = 50;
+enumy = 10;
 a = zeros((enumx + 1) * (enumy + 1));
 b = zeros((enumx + 1) * (enumy + 1), 1);
 
@@ -42,7 +42,7 @@ for i = 1:enumx*enumy
     a_el = zeros(4, 4);
     [pcoords, det_j, dphi_dx, dphi_dy] = fpdtrans(ncoords, base, db_dxi, db_deta);
     gweit = gweights .* det_j;
-    velocity = alph .* (0.25 * 2 ^ 2 - pcoords(:, 2) .^ 2);
+    velocity = alph .* (0.25 * 2 ^ 2 - abs(pcoords(:, 2) - 1) .^ 2);
 
     % the first part, v(y) * (dc / dx)
     for j = 1:4
@@ -71,14 +71,18 @@ for i = 1:enumx*enumy
             a(nidx(j), nidx(k)) = a(nidx(j), nidx(k)) + a_el(j, k);
         end
     end
-
-    % set up boundary condition c = c_0 at left
-    bidxs = fgetbn(enumx, enumy);
-    for j = 1:length(bidxs)
-        a(bidxs(j), bidxs(j)) = 1;
-        b(bidxs(j)) = c_0;
-    end
-
-    % solve
-    result = a \ b;
 end
+
+% set up boundary condition c = c_0 at left
+bidxs = fgetbn(enumx, enumy);
+for j = 1:length(bidxs)
+    a(bidxs(j), :) = 0;
+    a(bidxs(j), bidxs(j)) = 1;
+    b(bidxs(j)) = c_0;
+end
+
+% solve
+c = a \ b;
+
+% report result
+result = fgenres(c, enumx, enumy);
